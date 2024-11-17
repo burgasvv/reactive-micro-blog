@@ -1,0 +1,98 @@
+###
+GET http://localhost:8765/identities
+Content-Type: application/json
+Authorization: Basic admin admin
+
+###
+POST http://localhost:8765/identities/create
+Content-Type: application/json
+
+{
+  "username": "burgasvv",
+  "password": "cg3audio",
+  "email": "burgasvv@gmail.com",
+  "firstname": "Burgas",
+  "lastname": "Slava",
+  "patronymic": "Vasilich"
+}
+
+###
+PUT http://localhost:8765/identities/update
+Content-Type: application/json
+Authorization: Basic burgasvv cg3audio
+
+{
+  "id": 3,
+  "username": "burgasvv777",
+  "email": "burgasvv777@gmail.com",
+  "firstname": "Burgas",
+  "lastname": "Slava",
+  "patronymic": "Vasilich"
+}
+
+###
+@identity-id = 2
+DELETE http://localhost:8765/identities/delete/{{identity-id}}
+Authorization: Basic user user
+
+###
+GET http://localhost:8765/authentication/principal
+Authorization: Basic admin admin
+
+###
+GET http://localhost:8765/posts/by-identity?identityId=1
+Content-Type: application/json
+Authorization: Basic admin admin
+
+###
+DELETE http://localhost:8765/posts/delete?postId=1&identityId=1
+Authorization: Basic admin admin
+
+###
+POST http://localhost:8765/posts/create
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "identityId": 1,
+  "content": "Новый пост, который запостил админ"
+}
+
+###
+PUT http://localhost:8765/posts/update
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "id": 2,
+  "identityId": 1,
+  "content": "Новый пост, который запостил админ, был успешно изменен?"
+}
+
+###
+POST http://localhost:8765/comments/create
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "postId": 1,
+  "identityId": 1,
+  "content": "Спасибо за комментарий!"
+}
+
+###
+PUT http://localhost:8765/comments/update
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "id": 2,
+  "postId": 1,
+  "identityId": 1,
+  "content": "Спасибо за комментарий, просто чел!"
+}
+
+###
+DELETE http://localhost:8765/comments/delete?commentId=2&identityId=1
+Content-Type: application/json
+Authorization: Basic admin admin
