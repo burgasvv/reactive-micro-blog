@@ -32,6 +32,21 @@ create table if not exists comment(
     published_at timestamp not null
 );
 
+create table if not exists chat(
+    id serial primary key ,
+    sender_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
+    receiver_id serial references identity(id) on UPDATE cascade on DELETE cascade
+);
+
+create table if not exists message(
+    id serial primary key ,
+    chat_id serial references chat(id) on UPDATE cascade on DELETE cascade ,
+    sender_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
+    receiver_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
+    content text not null ,
+    received_at timestamp not null
+);
+
 insert into authority(name) values ('ADMIN');
 insert into authority(name) values ('USER');
 
@@ -51,3 +66,9 @@ insert into post(identity_id, content, published_at) values (
 insert into comment(post_id, identity_id, content, published_at) values (
     1, 2, 'Хорош, красава, молодец! Полезная информация, Админ!', '2024-11-15 11:26:14'
 );
+
+insert into chat(sender_id, receiver_id) values (1, 2);
+insert into message(sender_id, receiver_id, chat_id, content, received_at)
+values (1, 2, 1, 'Hello', '2024-11-17 15:32:26');
+
+select * from chat where sender_id = 1 or receiver_id = 1;
