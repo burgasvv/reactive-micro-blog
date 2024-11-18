@@ -18,6 +18,7 @@ public class ChatRouter {
     public RouterFunction<ServerResponse> chats() {
         return RouterFunctions.route()
                 .GET("/chats/by-identity/{identity-id}", chatHandler::handleFindChatsByIdentityId)
+                .GET("/chats/{chat-id}", chatHandler::handleFindById)
                 .build();
     }
 }

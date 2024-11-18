@@ -121,6 +121,11 @@ Authorization: Basic user user
 }
 
 ###
-GET http://localhost:8765/chats/by-identity/2
+GET http://localhost:8765/chats/by-identity/1
+Content-Type: application/json
+Authorization: Basic admin admin
+
+###
+GET http://localhost:8765/chats/1?identityId=2
 Content-Type: application/json
 Authorization: Basic user user

@@ -23,4 +23,14 @@ public class ChatHandler {
                 ChatResponse.class
         );
     }
+
+    public Mono<ServerResponse> handleFindById(ServerRequest request) {
+        String authValue = request.headers().firstHeader(AUTHORIZATION);
+        return ServerResponse.ok().body(
+                chatService.findById(
+                        request.pathVariable("chat-id"),
+                        request.queryParam("identityId").orElse(null), authValue
+                ), ChatResponse.class
+        );
+    }
 }
