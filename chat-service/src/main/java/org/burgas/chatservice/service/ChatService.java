@@ -50,7 +50,7 @@ public class ChatService {
                                              identityPrincipal.getId() == Long.parseLong(identityId)
                 )
                 .flatMap(
-                        identityPrincipal -> chatRepository.findById(Long.valueOf(chatId))
+                        _ -> chatRepository.findById(Long.valueOf(chatId))
                                 .flatMap(chat -> chatMapper.toChatResponse(Mono.just(chat), authValue))
                                 .log("CHAT_SERVICE::findById")
                 )
