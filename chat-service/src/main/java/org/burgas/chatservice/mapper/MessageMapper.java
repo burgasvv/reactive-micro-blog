@@ -75,7 +75,7 @@ public class MessageMapper {
                                     return Mono.fromCallable(
                                             () -> MessageResponse.builder()
                                                     .id(message.getId())
-                                                    .chatId(sender.getId())
+                                                    .chatId(message.getChatId())
                                                     .sender(sender)
                                                     .receiver(receiver)
                                                     .content(message.getContent())

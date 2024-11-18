@@ -66,9 +66,3 @@ insert into post(identity_id, content, published_at) values (
 insert into comment(post_id, identity_id, content, published_at) values (
     1, 2, 'Хорош, красава, молодец! Полезная информация, Админ!', '2024-11-15 11:26:14'
 );
-
-insert into chat(sender_id, receiver_id) values (1, 2);
-insert into message(sender_id, receiver_id, chat_id, content, received_at)
-values (1, 2, 1, 'Hello', '2024-11-17 15:32:26');
-
-select * from chat where sender_id = 1 or receiver_id = 1;

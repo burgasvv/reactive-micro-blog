@@ -32,7 +32,10 @@ public class SecurityConfig {
                                 .pathMatchers("/identities/create", "/authentication/principal")
                                 .permitAll()
 
-                                .pathMatchers("/identities/**", "/posts/**", "/comments/**")
+                                .pathMatchers(
+                                        "/identities/**", "/posts/**", "/comments/**",
+                                        "/chats/**", "/messages/**"
+                                )
                                 .hasAnyAuthority("ADMIN", "USER")
 
                 )

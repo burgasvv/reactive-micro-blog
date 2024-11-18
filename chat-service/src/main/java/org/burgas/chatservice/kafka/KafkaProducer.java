@@ -15,7 +15,7 @@ public class KafkaProducer {
     public Mono<Void> sendPrivateMessage(Mono<MessageResponse> messageResponseMono) {
         return messageResponseMono.flatMap(
                 messageResponse -> {
-                    kafkaTemplate.send("chat-service", String.valueOf(messageResponse.getChatId()), messageResponse);
+                    kafkaTemplate.send("chat-topic", String.valueOf(messageResponse.getChatId()), messageResponse);
                     return Mono.empty();
                 }
         );

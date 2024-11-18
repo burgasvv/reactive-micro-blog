@@ -96,3 +96,31 @@ Authorization: Basic admin admin
 DELETE http://localhost:8765/comments/delete?commentId=2&identityId=1
 Content-Type: application/json
 Authorization: Basic admin admin
+
+###
+POST http://localhost:8765/messages/send-private-message
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "content": "Привет, как дела?",
+  "senderId": 1,
+  "receiverId": 2
+}
+
+###
+POST http://localhost:8765/messages/send-private-message
+Content-Type: application/json
+Authorization: Basic user user
+
+{
+  "chatId": 1,
+  "content": "Привет, да норм, у тебя как?",
+  "senderId": 2,
+  "receiverId": 1
+}
+
+###
+GET http://localhost:8765/chats/by-identity/2
+Content-Type: application/json
+Authorization: Basic user user
