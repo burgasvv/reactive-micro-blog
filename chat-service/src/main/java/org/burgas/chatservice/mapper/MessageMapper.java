@@ -6,6 +6,7 @@ import org.burgas.chatservice.dto.MessageRequest;
 import org.burgas.chatservice.dto.MessageResponse;
 import org.burgas.chatservice.entity.Chat;
 import org.burgas.chatservice.entity.Message;
+import org.burgas.chatservice.handler.CryptHandler;
 import org.burgas.chatservice.handler.WebClientHandler;
 import org.burgas.chatservice.repository.MessageRepository;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class MessageMapper {
 
     private final MessageRepository messageRepository;
     private final WebClientHandler webClientHandler;
+    private final CryptHandler cryptHandler;
 
     public Mono<Message> toMessage(Mono<MessageRequest> messageRequestMono, Mono<Chat> chatMono) {
         return Mono.zip(messageRequestMono, chatMono)
@@ -38,7 +40,7 @@ public class MessageMapper {
                                                                 .chatId(chat.getId())
                                                                 .senderId(messageRequest.getSenderId())
                                                                 .receiverId(messageRequest.getReceiverId())
-                                                                .content(messageRequest.getContent())
+                                                                .content(cryptHandler.encrypt(messageRequest.getContent()))
                                                                 .receivedAt(message.getReceivedAt())
                                                                 .isNew(false)
                                                                 .build()
@@ -51,7 +53,7 @@ public class MessageMapper {
                                                                 .chatId(chat.getId())
                                                                 .senderId(messageRequest.getSenderId())
                                                                 .receiverId(messageRequest.getReceiverId())
-                                                                .content(messageRequest.getContent())
+                                                                .content(cryptHandler.encrypt(messageRequest.getContent()))
                                                                 .receivedAt(LocalDateTime.now())
                                                                 .isNew(true)
                                                                 .build()
@@ -78,7 +80,7 @@ public class MessageMapper {
                                                     .chatId(message.getChatId())
                                                     .sender(sender)
                                                     .receiver(receiver)
-                                                    .content(message.getContent())
+                                                    .content(cryptHandler.decrypt(message.getContent()))
                                                     .receivedAt(
                                                             message.getReceivedAt().format(
                                                                     DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")

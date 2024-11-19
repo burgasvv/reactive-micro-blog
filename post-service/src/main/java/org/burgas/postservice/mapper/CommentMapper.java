@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.burgas.postservice.dto.CommentRequest;
 import org.burgas.postservice.dto.CommentResponse;
 import org.burgas.postservice.entity.Comment;
+import org.burgas.postservice.handler.CryptHandler;
 import org.burgas.postservice.handler.WebClientHandler;
 import org.burgas.postservice.repository.CommentRepository;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ public class CommentMapper {
 
     private final CommentRepository commentRepository;
     private final WebClientHandler webClientHandler;
+    private final CryptHandler cryptHandler;
 
     public Mono<Comment> toComment(Mono<CommentRequest> commentRequestMono) {
         return commentRequestMono.flatMap(
@@ -31,7 +33,7 @@ public class CommentMapper {
                                                     .id(commentRequest.getId())
                                                     .identityId(commentRequest.getIdentityId())
                                                     .postId(commentRequest.getPostId())
-                                                    .content(commentRequest.getContent())
+                                                    .content(cryptHandler.encrypt(commentRequest.getContent()))
                                                     .publishedAt(comment.getPublishedAt())
                                                     .isNew(false)
                                                     .build()
@@ -43,7 +45,7 @@ public class CommentMapper {
                                                     .id(commentRequest.getId())
                                                     .identityId(commentRequest.getIdentityId())
                                                     .postId(commentRequest.getPostId())
-                                                    .content(commentRequest.getContent())
+                                                    .content(cryptHandler.encrypt(commentRequest.getContent()))
                                                     .publishedAt(LocalDateTime.now())
                                                     .isNew(true)
                                                     .build()
@@ -61,7 +63,7 @@ public class CommentMapper {
                                         () -> CommentResponse.builder()
                                                 .id(comment.getId())
                                                 .postId(comment.getPostId())
-                                                .content(comment.getContent())
+                                                .content(cryptHandler.decrypt(comment.getContent()))
                                                 .identityResponse(identityResponse)
                                                 .publishedAt(
                                                         comment.getPublishedAt().format(

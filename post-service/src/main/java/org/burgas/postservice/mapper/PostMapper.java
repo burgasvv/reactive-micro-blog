@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.burgas.postservice.dto.PostRequest;
 import org.burgas.postservice.dto.PostResponse;
 import org.burgas.postservice.entity.Post;
+import org.burgas.postservice.handler.CryptHandler;
 import org.burgas.postservice.handler.WebClientHandler;
 import org.burgas.postservice.repository.PostRepository;
 import org.burgas.postservice.service.CommentService;
@@ -20,6 +21,7 @@ public class PostMapper {
     private final PostRepository postRepository;
     private final CommentService commentService;
     private final WebClientHandler webClientHandler;
+    private final CryptHandler cryptHandler;
 
     public Mono<Post> toPost(Mono<PostRequest> postRequestMono) {
         return postRequestMono.flatMap(
@@ -31,7 +33,7 @@ public class PostMapper {
                                     post -> Mono.fromCallable(
                                             () -> Post.builder()
                                                     .id(postRequest.getId())
-                                                    .content(postRequest.getContent())
+                                                    .content(cryptHandler.encrypt(postRequest.getContent()))
                                                     .identityId(postRequest.getIdentityId())
                                                     .publishedAt(post.getPublishedAt())
                                                     .isNew(false)
@@ -42,7 +44,7 @@ public class PostMapper {
                                     Mono.fromCallable(
                                             () -> Post.builder()
                                                     .id(postRequest.getId())
-                                                    .content(postRequest.getContent())
+                                                    .content(cryptHandler.encrypt(postRequest.getContent()))
                                                     .identityId(postRequest.getIdentityId())
                                                     .publishedAt(LocalDateTime.now())
                                                     .isNew(true)
@@ -64,7 +66,7 @@ public class PostMapper {
                                                 commentResponses -> Mono.fromCallable(
                                                         () -> PostResponse.builder()
                                                                 .id(post.getId())
-                                                                .content(post.getContent())
+                                                                .content(cryptHandler.decrypt(post.getContent()))
                                                                 .identityResponse(identityResponse)
                                                                 .commentResponses(commentResponses)
                                                                 .publishedAt(
