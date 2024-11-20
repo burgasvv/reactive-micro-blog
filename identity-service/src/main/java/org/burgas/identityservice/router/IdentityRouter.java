@@ -19,6 +19,7 @@ public class IdentityRouter {
         return RouterFunctions.route()
                 .GET("/identities", identityHandler::handleFindAll)
                 .GET("/identities/by-id/{identity-id}", identityHandler::handleFindById)
+                .GET("/identities/by-id/{identity-id}/friends", identityHandler::handleFindFriendsByIdentityId)
                 .GET("/identities/{username}", identityHandler::handleFindByUsername)
                 .POST("/identities/create", identityHandler::handleCreateIdentity)
                 .PUT("/identities/update", identityHandler::handleUpdateIdentity)

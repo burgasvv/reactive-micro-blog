@@ -4,33 +4,6 @@ Content-Type: application/json
 Authorization: Basic admin admin
 
 ###
-POST http://localhost:8765/identities/create
-Content-Type: application/json
-
-{
-  "username": "burgasvv",
-  "password": "cg3audio",
-  "email": "burgasvv@gmail.com",
-  "firstname": "Burgas",
-  "lastname": "Slava",
-  "patronymic": "Vasilich"
-}
-
-###
-PUT http://localhost:8765/identities/update
-Content-Type: application/json
-Authorization: Basic burgasvv cg3audio
-
-{
-  "id": 3,
-  "username": "burgasvv777",
-  "email": "burgasvv777@gmail.com",
-  "firstname": "Burgas",
-  "lastname": "Slava",
-  "patronymic": "Vasilich"
-}
-
-###
 @identity-id = 2
 DELETE http://localhost:8765/identities/delete/{{identity-id}}
 Authorization: Basic user user
@@ -129,3 +102,101 @@ Authorization: Basic admin admin
 GET http://localhost:8765/chats/1?identityId=2
 Content-Type: application/json
 Authorization: Basic user user
+
+###
+POST http://localhost:8765/identities/create
+Content-Type: application/json
+
+{
+  "username": "burgasvv",
+  "password": "cg3audio",
+  "email": "burgasvv@gmail.com",
+  "firstname": "Burgas",
+  "lastname": "Slava",
+  "patronymic": "Vasilich"
+}
+
+###
+POST http://localhost:8765/friendship/send-friend-request
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "identityId": 1,
+  "friendId": 2
+}
+
+###
+POST http://localhost:8765/friendship/send-friend-request
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "identityId": 1,
+  "friendId": 3
+}
+
+###
+GET http://localhost:8765/friendship/by-friend/2?accepted=false
+Content-Type: application/json
+Authorization: Basic user user
+
+###
+GET http://localhost:8765/friendship/by-friend/2?accepted=true
+Content-Type: application/json
+Authorization: Basic user user
+
+###
+POST http://localhost:8765/friendship/accept-friendship
+Content-Type: application/json
+Authorization: Basic user user
+
+{
+  "identityId": 2,
+  "friendId": 1
+}
+
+###
+POST http://localhost:8765/friendship/accept-friendship
+Content-Type: application/json
+Authorization: Basic burgasvv cg3audio
+
+{
+  "identityId": 3,
+  "friendId": 1
+}
+
+###
+GET http://localhost:8765/identities/by-id/1/friends
+Content-Type: application/json
+Authorization: Basic admin admin
+
+###
+POST http://localhost:8765/friendship/decline-friendship
+Content-Type: application/json
+Authorization: Basic user user
+
+{
+  "identityId": 2,
+  "friendId": 1
+}
+
+###
+DELETE http://localhost:8765/friendship/delete-from friendship
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "identityId": 1,
+  "friendId": 3
+}
+
+###
+DELETE http://localhost:8765/friendship/delete-from friendship
+Content-Type: application/json
+Authorization: Basic user user
+
+{
+  "identityId": 2,
+  "friendId": 1
+}

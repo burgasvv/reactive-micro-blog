@@ -14,7 +14,7 @@ public class ProxyConfig {
                 .route(
                         "identities",
                         predicateSpec -> predicateSpec
-                                .path("/identities/**")
+                                .path("/identities/**", "/friendship/**")
                                 .uri("lb://identity-service")
                 )
                 .route(

@@ -132,4 +132,24 @@ public class IdentityService {
                         }
                 );
     }
+
+    public Flux<IdentityResponse> findFriendsByIdentityId(String identityId, String authValue) {
+        return webClientHandler.getPrincipal(authValue)
+                .flux()
+                .flatMap(
+                        identityPrincipal -> {
+                            if (
+                                    identityPrincipal.getAuthenticated() &&
+                                    identityPrincipal.getId() == Long.parseLong(identityId)
+                            ) {
+                                return identityRepository.findFriendsByIdentityId(Long.valueOf(identityId))
+                                        .flatMap(identity -> identityMapper.toIdentityResponse(Mono.just(identity)))
+                                        .log("IDENTITY-SERVICE::findFriendsByIdentityId");
+                            } else
+                                return Mono.error(
+                                        new RuntimeException("Пользователь не авторизован и не имеет прав доступа")
+                                );
+                        }
+                );
+    }
 }

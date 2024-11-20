@@ -1,7 +1,7 @@
 
 create table if not exists authority(
     id serial primary key ,
-    name varchar
+    name varchar not null
 );
 
 create table if not exists identity(
@@ -15,6 +15,13 @@ create table if not exists identity(
     enabled boolean not null ,
     authority_id serial references authority(id)
         on UPDATE cascade on DELETE set null
+);
+
+create table if not exists friendship(
+    identity_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
+    friend_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
+    accepted boolean ,
+    primary key (identity_id, friend_id)
 );
 
 create table if not exists post(

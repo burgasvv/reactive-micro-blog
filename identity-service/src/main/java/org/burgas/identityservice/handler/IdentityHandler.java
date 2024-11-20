@@ -57,4 +57,12 @@ public class IdentityHandler {
                 identityService.deleteIdentity(request.pathVariable("identity-id"), authValue), String.class
         );
     }
+
+    public Mono<ServerResponse> handleFindFriendsByIdentityId(final ServerRequest request) {
+        String authValue = request.headers().firstHeader(AUTHORIZATION);
+        return ServerResponse.ok().body(
+                identityService.findFriendsByIdentityId(request.pathVariable("identity-id"), authValue),
+                IdentityResponse.class
+        );
+    }
 }
