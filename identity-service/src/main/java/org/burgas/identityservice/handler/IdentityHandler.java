@@ -65,4 +65,14 @@ public class IdentityHandler {
                 IdentityResponse.class
         );
     }
+
+    public Mono<ServerResponse> handleFindIdentitiesByCommunityId(final ServerRequest request) {
+        return ServerResponse.ok().body(
+                identityService.findIdentitiesByCommunityId(
+                        request.queryParam("identityId").orElse(null),
+                        request.queryParam("communityId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ), IdentityResponse.class
+        );
+    }
 }

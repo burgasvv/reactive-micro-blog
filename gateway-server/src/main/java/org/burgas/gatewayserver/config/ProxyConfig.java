@@ -29,6 +29,12 @@ public class ProxyConfig {
                                 .path("/chats/**", "/messages/**")
                                 .uri("lb://chat-service")
                 )
+                .route(
+                        "communities",
+                        predicateSpec -> predicateSpec
+                                .path("/communities/**")
+                                .uri("lb://community-service")
+                )
                 .build();
     }
 }

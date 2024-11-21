@@ -20,7 +20,7 @@ create table if not exists identity(
 create table if not exists friendship(
     identity_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
     friend_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
-    accepted boolean ,
+    accepted boolean not null ,
     primary key (identity_id, friend_id)
 );
 
@@ -52,6 +52,29 @@ create table if not exists message(
     receiver_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
     content text not null ,
     received_at timestamp not null
+);
+
+create table if not exists community(
+    id serial primary key ,
+    title varchar not null ,
+    description text ,
+    is_public boolean not null ,
+    open_post boolean not null ,
+    open_comment boolean not null ,
+    created_at timestamp not null
+);
+
+create table if not exists identity_community(
+    id serial primary key ,
+    identity_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
+    community_id serial references community(id) on UPDATE cascade on DELETE cascade ,
+    owner boolean not null
+);
+
+create table if not exists community_post(
+    id serial primary key ,
+    community_id serial references community(id) on UPDATE cascade on DELETE cascade ,
+    post_id serial references post(id) on UPDATE cascade on DELETE cascade
 );
 
 insert into authority(name) values ('ADMIN');

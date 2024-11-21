@@ -34,7 +34,7 @@ public class SecurityConfig {
 
                                 .pathMatchers(
                                         "/identities/**", "/posts/**", "/comments/**",
-                                        "/chats/**", "/messages/**", "/friendship/**"
+                                        "/chats/**", "/messages/**", "/friendship/**", "/communities/**"
                                 )
                                 .hasAnyAuthority("ADMIN", "USER")
 

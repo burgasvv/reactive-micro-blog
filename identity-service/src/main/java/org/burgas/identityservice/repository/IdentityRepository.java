@@ -19,4 +19,12 @@ public interface IdentityRepository extends ReactiveCrudRepository<Identity, Lon
                     """
     )
     Flux<Identity> findFriendsByIdentityId(Long identityId);
+
+    @Query(
+            value = """
+                    select distinct i.* from identity i join identity_community ic on i.id = ic.identity_id
+                    where ic.community_id = :communityId
+                    """
+    )
+    Flux<Identity> findIdentitiesByCommunityId(Long communityId);
 }

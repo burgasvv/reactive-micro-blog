@@ -152,4 +152,23 @@ public class IdentityService {
                         }
                 );
     }
+
+    public Flux<IdentityResponse> findIdentitiesByCommunityId(String identityId, String communityId, String authValue) {
+        return webClientHandler.getPrincipal(authValue)
+                .flux()
+                .flatMap(
+                        identityPrincipal -> {
+                            if (
+                                    identityPrincipal.getAuthenticated() &&
+                                    identityPrincipal.getId() == Long.parseLong(identityId)
+                            ) {
+                                return identityRepository.findIdentitiesByCommunityId(Long.valueOf(communityId))
+                                        .flatMap(identity -> identityMapper.toIdentityResponse(Mono.just(identity)));
+                            } else
+                                return Mono.error(
+                                        new RuntimeException("Пользователь не авторизован и не имеет прав доступа")
+                                );
+                        }
+                );
+    }
 }

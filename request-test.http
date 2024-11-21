@@ -184,19 +184,57 @@ Authorization: Basic user user
 ###
 DELETE http://localhost:8765/friendship/delete-from friendship
 Content-Type: application/json
-Authorization: Basic admin admin
+Authorization: Basic burgasvv cg3audio
 
 {
-  "identityId": 1,
-  "friendId": 3
+  "identityId": 3,
+  "friendId": 1
 }
 
 ###
-DELETE http://localhost:8765/friendship/delete-from friendship
+POST http://localhost:8765/communities/create?identityId=1
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "title": "Java Programmer",
+  "description": "New java community for you",
+  "isPublic": true,
+  "openPost": true,
+  "openComment": true
+}
+
+###
+POST http://localhost:8765/communities/join-the-community
 Content-Type: application/json
 Authorization: Basic user user
 
 {
   "identityId": 2,
-  "friendId": 1
+  "communityId": 1
 }
+
+###
+POST http://localhost:8765/communities/leave-the-community
+Content-Type: application/json
+Authorization: Basic user user
+
+{
+  "identityId": 2,
+  "communityId": 1
+}
+
+###
+GET http://localhost:8765/communities/by-identity?identityId=2
+Content-Type: application/json
+Authorization: Basic user user
+
+###
+GET http://localhost:8765/identities/in-community?identityId=1&communityId=1
+Content-Type: application/json
+Authorization: Basic admin admin
+
+###
+GET http://localhost:8765/communities/1
+Content-Type: application/json
+Authorization: Basic user user

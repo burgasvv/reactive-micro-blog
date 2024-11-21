@@ -2,6 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/chat-service/src/main/java/org/burgas/chatservice/repository/ChatRepository.java" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/community-service/src/main/java/org/burgas/communityservice/repository/CommunityRepository.java" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/database-server/src/main/resources/database/cleanupData.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/database-server/src/main/resources/database/populateData.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/identity-service/src/main/java/org/burgas/identityservice/repository/FriendshipRepository.java" dialect="PostgreSQL" />
