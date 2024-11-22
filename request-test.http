@@ -225,7 +225,7 @@ Authorization: Basic user user
 }
 
 ###
-GET http://localhost:8765/communities/by-identity?identityId=2
+GET http://localhost:8765/communities/on-identity/2
 Content-Type: application/json
 Authorization: Basic user user
 

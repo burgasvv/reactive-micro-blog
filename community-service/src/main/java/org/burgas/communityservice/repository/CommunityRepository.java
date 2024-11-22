@@ -39,7 +39,7 @@ public interface CommunityRepository extends ReactiveCrudRepository<Community, L
 
     @Query(
             value = """
-                    select c.* from community c join identity_community ic on c.id = ic.community_id
+                    select distinct c.* from community c join identity_community ic on c.id = ic.community_id
                     where ic.identity_id = :identityId
                     """
     )

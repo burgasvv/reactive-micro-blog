@@ -28,8 +28,8 @@ public class CommunityService {
     private final CommunityMapper communityMapper;
     private final WebClientHandler webClientHandler;
 
-    public Mono<CommunityResponse> findById(String id) {
-        return communityRepository.findById(Long.valueOf(id))
+    public Mono<CommunityResponse> findById(String communityId) {
+        return communityRepository.findById(Long.parseLong(communityId))
                 .flatMap(community -> communityMapper.toCommunityResponse(Mono.just(community)));
     }
 

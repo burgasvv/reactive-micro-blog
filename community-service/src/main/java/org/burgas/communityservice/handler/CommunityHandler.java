@@ -28,7 +28,7 @@ public class CommunityHandler {
         String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
                 communityService.findCommunitiesByIdentityId(
-                        request.queryParam("identityId").orElse(null), authValue
+                        request.pathVariable("identity-id"), authValue
                 ),
                 CommunityResponse.class
         );

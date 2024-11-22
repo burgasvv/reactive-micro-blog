@@ -65,10 +65,10 @@ create table if not exists community(
 );
 
 create table if not exists identity_community(
-    id serial primary key ,
     identity_id serial references identity(id) on UPDATE cascade on DELETE cascade ,
     community_id serial references community(id) on UPDATE cascade on DELETE cascade ,
-    owner boolean not null
+    owner boolean not null ,
+    primary key (identity_id, community_id)
 );
 
 create table if not exists community_post(
