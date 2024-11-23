@@ -1,6 +1,7 @@
 package org.burgas.identityservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.burgas.identityservice.dto.IdentityPrincipal;
 import org.burgas.identityservice.dto.IdentityRequestCreate;
 import org.burgas.identityservice.dto.IdentityRequestUpdate;
 import org.burgas.identityservice.dto.IdentityResponse;
@@ -49,6 +50,33 @@ public class IdentityService {
                 .flatMap(identity -> identityMapper.toIdentityResponse(Mono.just(identity))
                 )
                 .log("IDENTITY-SERVICE::findByUsername");
+    }
+
+    @Transactional(
+            isolation = SERIALIZABLE,
+            propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public Mono<String> createIdentityWall(Mono<IdentityRequestCreate> identityRequestCreateMono, String authValue) {
+        return Mono.zip(webClientHandler.getPrincipal(authValue), identityRequestCreateMono)
+                .flatMap(
+                        objects -> {
+                            IdentityPrincipal identityPrincipal = objects.getT1();
+                            IdentityRequestCreate identityRequestCreate = objects.getT2();
+                            if (
+                                    identityPrincipal.getAuthenticated() &&
+                                    Objects.equals(identityPrincipal.getId(), identityRequestCreate.getId())
+                            ) {
+                                return identityRepository.createIdentityWallByIdentityId(
+                                        identityRequestCreate.getId(), identityRequestCreate.getWallIsOpened()
+                                )
+                                        .then(Mono.just("Стена активирована"));
+                            } else
+                                return Mono.error(
+                                        new RuntimeException("Пользователь не авторизован и не имеет прав доступа")
+                                );
+                        }
+                );
     }
 
     @Transactional(

@@ -44,4 +44,12 @@ public interface CommunityRepository extends ReactiveCrudRepository<Community, L
                     """
     )
     Flux<Community> findCommunitiesByIdentityId(Long identityId);
+
+    @Modifying
+    @Query(
+            value = """
+                    insert into wall(community_id, is_opened) values (:communityId, :isOpened)
+                    """
+    )
+    Mono<Void> createCommunityWallByCommunityId(Long communityId, Boolean isOpened);
 }

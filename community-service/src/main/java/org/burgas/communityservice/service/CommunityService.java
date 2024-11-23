@@ -1,10 +1,7 @@
 package org.burgas.communityservice.service;
 
 import lombok.RequiredArgsConstructor;
-import org.burgas.communityservice.dto.CommunityRequest;
-import org.burgas.communityservice.dto.CommunityResponse;
-import org.burgas.communityservice.dto.IdentityCommunityRequest;
-import org.burgas.communityservice.dto.IdentityPrincipal;
+import org.burgas.communityservice.dto.*;
 import org.burgas.communityservice.handler.WebClientHandler;
 import org.burgas.communityservice.mapper.CommunityMapper;
 import org.burgas.communityservice.repository.CommunityRepository;
@@ -31,6 +28,31 @@ public class CommunityService {
     public Mono<CommunityResponse> findById(String communityId) {
         return communityRepository.findById(Long.parseLong(communityId))
                 .flatMap(community -> communityMapper.toCommunityResponse(Mono.just(community)));
+    }
+
+    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    public Mono<String> createCommunityWallByCommunityId(
+            Mono<CommunityRequest> communityRequestMono, String identityId, String authValue
+    ) {
+        return Mono.zip(webClientHandler.getPrincipal(authValue), communityRequestMono)
+                .flatMap(
+                        objects -> {
+                            IdentityPrincipal identityPrincipal = objects.getT1();
+                            CommunityRequest communityRequest = objects.getT2();
+                            if (
+                                    identityPrincipal.getAuthenticated() &&
+                                    identityPrincipal.getId() == Long.parseLong(identityId)
+                            ) {
+                                return communityRepository.createCommunityWallByCommunityId(
+                                        communityRequest.getId(), communityRequest.getWallIsOpened()
+                                )
+                                        .then(Mono.just("Стена сообщества создана"));
+                            } else
+                                return Mono.error(
+                                        new RuntimeException("Пользователь не авторизован и не имеет прав доступа")
+                                );
+                        }
+                );
     }
 
     public Flux<CommunityResponse> findCommunitiesByIdentityId(String identityId, String authValue) {

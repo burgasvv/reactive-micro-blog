@@ -28,6 +28,7 @@ Authorization: Basic admin admin
 
 {
   "identityId": 1,
+  "wallId": 1,
   "content": "Новый пост, который запостил админ"
 }
 
@@ -117,6 +118,16 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:8765/identities/create-wall
+Content-Type: application/json
+Authorization: Basic burgasvv cg3audio
+
+{
+  "id": 3,
+  "wallIsOpened": true
+}
+
+###
 POST http://localhost:8765/friendship/send-friend-request
 Content-Type: application/json
 Authorization: Basic admin admin
@@ -202,6 +213,16 @@ Authorization: Basic admin admin
   "isPublic": true,
   "openPost": true,
   "openComment": true
+}
+
+###
+POST http://localhost:8765/communities/create-wall?identityId=1
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "id": 1,
+  "wallIsOpened": true
 }
 
 ###

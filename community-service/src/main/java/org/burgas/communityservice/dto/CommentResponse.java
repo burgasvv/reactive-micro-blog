@@ -1,4 +1,4 @@
-package org.burgas.postservice.dto;
+package org.burgas.communityservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostRequest {
+public class CommentResponse {
 
     private Long id;
-    private Long wallId;
-    private Long identityId;
+    private Long postId;
     private String content;
+    private String publishedAt;
+    private IdentityResponse identityResponse;
 }

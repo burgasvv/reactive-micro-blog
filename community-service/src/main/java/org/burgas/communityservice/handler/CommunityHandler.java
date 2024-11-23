@@ -34,6 +34,16 @@ public class CommunityHandler {
         );
     }
 
+    public Mono<ServerResponse> handleCreateCommunityWallByCommunityId(ServerRequest request) {
+        return ServerResponse.ok().body(
+                communityService.createCommunityWallByCommunityId(
+                        request.bodyToMono(CommunityRequest.class),
+                        request.queryParam("identityId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ), String.class
+        );
+    }
+
     public Mono<ServerResponse> handleCreateCommunity(ServerRequest request) {
         String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(

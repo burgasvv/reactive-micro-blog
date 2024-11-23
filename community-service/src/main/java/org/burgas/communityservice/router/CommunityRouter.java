@@ -19,6 +19,7 @@ public class CommunityRouter {
         return RouterFunctions.route()
                 .GET("/communities/{community-id}", communityHandler::handleFindById)
                 .GET("/communities/on-identity/{identity-id}", communityHandler::handleFindCommunitiesByIdentityId)
+                .POST("/communities/create-wall", communityHandler::handleCreateCommunityWallByCommunityId)
                 .POST("/communities/create", communityHandler::handleCreateCommunity)
                 .POST("/communities/join-the-community", communityHandler::handleJoinTheCommunity)
                 .POST("/communities/leave-the-community", communityHandler::handleLeaveTheCommunity)

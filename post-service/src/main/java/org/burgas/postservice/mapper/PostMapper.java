@@ -35,6 +35,7 @@ public class PostMapper {
                                                     .id(postRequest.getId())
                                                     .content(cryptHandler.encrypt(postRequest.getContent()))
                                                     .identityId(postRequest.getIdentityId())
+                                                    .wallId(post.getWallId())
                                                     .publishedAt(post.getPublishedAt())
                                                     .isNew(false)
                                                     .build()
@@ -46,6 +47,7 @@ public class PostMapper {
                                                     .id(postRequest.getId())
                                                     .content(cryptHandler.encrypt(postRequest.getContent()))
                                                     .identityId(postRequest.getIdentityId())
+                                                    .wallId(postRequest.getWallId())
                                                     .publishedAt(LocalDateTime.now())
                                                     .isNew(true)
                                                     .build()
@@ -66,6 +68,7 @@ public class PostMapper {
                                                 commentResponses -> Mono.fromCallable(
                                                         () -> PostResponse.builder()
                                                                 .id(post.getId())
+                                                                .wallId(post.getWallId())
                                                                 .content(cryptHandler.decrypt(post.getContent()))
                                                                 .identityResponse(identityResponse)
                                                                 .commentResponses(commentResponses)

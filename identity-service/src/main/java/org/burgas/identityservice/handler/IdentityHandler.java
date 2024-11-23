@@ -5,6 +5,8 @@ import org.burgas.identityservice.dto.IdentityRequestCreate;
 import org.burgas.identityservice.dto.IdentityRequestUpdate;
 import org.burgas.identityservice.dto.IdentityResponse;
 import org.burgas.identityservice.service.IdentityService;
+import org.springframework.boot.autoconfigure.rsocket.RSocketProperties;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -32,6 +34,14 @@ public class IdentityHandler {
         return ServerResponse.ok().body(
                 identityService.findByUsername(request.pathVariable("username")),
                 IdentityResponse.class
+        );
+    }
+
+    public Mono<ServerResponse> handleCreateIdentityWall(final ServerRequest request) {
+        return ServerResponse.ok().body(
+                identityService.createIdentityWall(
+                        request.bodyToMono(IdentityRequestCreate.class), request.headers().firstHeader(AUTHORIZATION)
+                ), String.class
         );
     }
 

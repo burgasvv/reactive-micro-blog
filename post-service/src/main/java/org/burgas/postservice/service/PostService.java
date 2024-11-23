@@ -4,15 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.burgas.postservice.dto.IdentityPrincipal;
 import org.burgas.postservice.dto.PostRequest;
 import org.burgas.postservice.dto.PostResponse;
+import org.burgas.postservice.entity.Wall;
 import org.burgas.postservice.handler.WebClientHandler;
 import org.burgas.postservice.mapper.PostMapper;
 import org.burgas.postservice.repository.PostRepository;
+import org.burgas.postservice.repository.WallRepository;
+import org.burgas.postservice.util.UtilException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
@@ -26,6 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final WebClientHandler webClientHandler;
+    private final WallRepository wallRepository;
 
     public Flux<PostResponse> findByIdentityId(String identityId, String authValue) {
         return postRepository.findPostsByIdentityId(Long.valueOf(identityId))
@@ -46,12 +51,24 @@ public class PostService {
                                     identityPrincipal.getAuthenticated() &&
                                     Objects.equals(identityPrincipal.getId(), postRequest.getIdentityId())
                             ) {
-                                return postMapper.toPost(Mono.just(postRequest))
-                                        .flatMap(postRepository::save)
-                                        .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue));
+                                return wallRepository.findById(postRequest.getWallId())
+                                        .mapNotNull(wall -> wall)
+                                        .flatMap(
+                                                wall -> Optional.of(wall).filter(Wall::getIsOpened)
+                                                        .map(_ -> postMapper.toPost(Mono.just(postRequest))
+                                                                .flatMap(postRepository::save)
+                                                                .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue))
+                                                        )
+                                                        .orElseGet(
+                                                                () -> Mono.error(
+                                                                        new RuntimeException(UtilException.CLOSED_WALL_EXCEPTION)
+                                                                )
+                                                        )
+                                        )
+                                        .switchIfEmpty(Mono.error(new RuntimeException(UtilException.WALL_NOT_FOUND_EXCEPTION)));
                             } else
                                 return Mono.error(
-                                        new RuntimeException("Пользователь не авторизован или не имеет прав доступа")
+                                        new RuntimeException(UtilException.NOT_AUTHORIZED_EXCEPTION)
                                 );
                         }
                 )
@@ -72,7 +89,7 @@ public class PostService {
                                 .then(Mono.fromCallable(() -> "Пост с идентификатором " + postId + " успешно удален"))
                 )
                 .switchIfEmpty(
-                        Mono.error(new RuntimeException("Пользователь не авторизован или не имеет прав доступа"))
+                        Mono.error(new RuntimeException(UtilException.NOT_AUTHORIZED_EXCEPTION))
                 )
                 .log("POST_SERVICE::delete");
 

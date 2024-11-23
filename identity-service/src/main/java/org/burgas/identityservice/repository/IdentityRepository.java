@@ -1,6 +1,7 @@
 package org.burgas.identityservice.repository;
 
 import org.burgas.identityservice.entity.Identity;
+import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,12 @@ public interface IdentityRepository extends ReactiveCrudRepository<Identity, Lon
                     """
     )
     Flux<Identity> findIdentitiesByCommunityId(Long communityId);
+
+    @Modifying
+    @Query(
+            value = """
+                    insert into wall(identity_id, is_opened) VALUES (:identityId, :isOpened)
+                    """
+    )
+    Mono<Void> createIdentityWallByIdentityId(Long identityId, Boolean isOpened);
 }

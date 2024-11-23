@@ -17,4 +17,5 @@ public class CommunityRequest {
     private Boolean isPublic;
     private Boolean openPost;
     private Boolean openComment;
+    private Boolean wallIsOpened;
 }

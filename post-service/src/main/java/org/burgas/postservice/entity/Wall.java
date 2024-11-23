@@ -9,27 +9,19 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment implements Persistable<Long> {
+public class Wall implements Persistable<Long> {
 
     @Id
     private Long id;
-
-    @Column("identity_id")
     private Long identityId;
+    private Long communityId;
 
-    @Column("post_id")
-    private Long postId;
-
-    private String content;
-
-    @Column("published_at")
-    private LocalDateTime publishedAt;
+    @Column("is_opened")
+    private Boolean isOpened;
 
     @Transient
     private Boolean isNew;

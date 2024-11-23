@@ -1,4 +1,4 @@
-package org.burgas.postservice.dto;
+package org.burgas.communityservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostRequest {
+public class AuthorityResponse {
 
     private Long id;
-    private Long wallId;
-    private Long identityId;
-    private String content;
+    private String name;
 }

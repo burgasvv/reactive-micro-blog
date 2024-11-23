@@ -22,6 +22,10 @@ public class Post implements Persistable<Long> {
 
     @Column("identity_id")
     private Long identityId;
+
+    @Column("wall_id")
+    private Long wallId;
+
     private String content;
 
     @Column("published_at")

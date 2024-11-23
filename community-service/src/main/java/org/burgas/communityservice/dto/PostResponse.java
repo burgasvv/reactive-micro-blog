@@ -1,4 +1,4 @@
-package org.burgas.postservice.dto;
+package org.burgas.communityservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,6 @@ public class PostResponse {
     private Long id;
     private String content;
     private String publishedAt;
-    private Long wallId;
     private IdentityResponse identityResponse;
     private List<CommentResponse> commentResponses;
 }

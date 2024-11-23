@@ -23,6 +23,7 @@ public class IdentityRouter {
                 .GET("/identities/in-community", identityHandler::handleFindIdentitiesByCommunityId)
                 .GET("/identities/{username}", identityHandler::handleFindByUsername)
                 .POST("/identities/create", identityHandler::handleCreateIdentity)
+                .POST("/identities/create-wall", identityHandler::handleCreateIdentityWall)
                 .PUT("/identities/update", identityHandler::handleUpdateIdentity)
                 .DELETE("/identities/delete/{identity-id}", identityHandler::handleDeleteIdentity)
                 .build();

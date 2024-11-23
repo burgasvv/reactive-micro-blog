@@ -1,4 +1,4 @@
-package org.burgas.identityservice.dto;
+package org.burgas.communityservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IdentityRequestCreate {
+public class IdentityResponse {
 
     private Long id;
     private String username;
@@ -18,5 +18,6 @@ public class IdentityRequestCreate {
     private String firstname;
     private String lastname;
     private String patronymic;
-    private Boolean wallIsOpened;
+    private Boolean enabled;
+    private AuthorityResponse authorityResponse;
 }
