@@ -5,8 +5,6 @@ import org.burgas.identityservice.dto.IdentityRequestCreate;
 import org.burgas.identityservice.dto.IdentityRequestUpdate;
 import org.burgas.identityservice.dto.IdentityResponse;
 import org.burgas.identityservice.service.IdentityService;
-import org.springframework.boot.autoconfigure.rsocket.RSocketProperties;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
