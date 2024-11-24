@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IdentityCommunityRequest {
+public class AuthorityResponse {
 
-    private Long identityId;
-    private Long receiverId;
-    private Long communityId;
+    private Long id;
+    private String name;
 }

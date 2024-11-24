@@ -18,7 +18,7 @@ public interface CommunityRepository extends ReactiveCrudRepository<Community, L
                     values (:identityId, :communityId, true)
                     """
     )
-    Mono<Void> insertCommunityCreator(Long identityId, Long communityId);
+    Mono<Void> insertCommunityAdmin(Long identityId, Long communityId);
 
     @Modifying
     @Query(
@@ -52,4 +52,30 @@ public interface CommunityRepository extends ReactiveCrudRepository<Community, L
                     """
     )
     Mono<Void> createCommunityWallByCommunityId(Long communityId, Boolean isOpened);
+
+    @Modifying
+    @Query(
+            value = """
+                    insert into community_invitation(identity_id, receiver_id, community_id, is_accepted)
+                    VALUES (:identityId, :receiverId, :communityId, :isAccepted)
+                    """
+    )
+    Mono<Void> makeInvitationFromCommunityToIdentity(Long communityId, Long identityId, Long receiverId, Boolean isAccepted);
+
+    @Query(
+            value = """
+                    select ic.owner from identity_community ic
+                                    where community_id = :communityId and identity_id = :identityId
+                    """
+    )
+    Mono<Boolean> isOwnerOfCommunity(Long communityId, Long identityId);
+
+    @Modifying
+    @Query(
+            value = """
+                    update community_invitation set is_accepted = :isAccepted where community_id = :communityId
+                    and identity_id = :identityId and receiver_id = :receiverId
+                    """
+    )
+    Mono<Void> makeInvitationAccepted(Long communityId, Long identityId, Long receiverId, Boolean isAccepted);
 }

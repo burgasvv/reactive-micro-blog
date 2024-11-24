@@ -23,6 +23,12 @@ public class CommunityRouter {
                 .POST("/communities/create", communityHandler::handleCreateCommunity)
                 .POST("/communities/join-the-community", communityHandler::handleJoinTheCommunity)
                 .POST("/communities/leave-the-community", communityHandler::handleLeaveTheCommunity)
+                .POST("/communities/send-invitation-community-administration",
+                        communityHandler::handleSendInvitationToCommunityAdministration)
+                .POST(
+                        "/communities/accept-invitation-community-administration",
+                        communityHandler::handleAcceptInvitationToCommunityAdministration
+                )
                 .build();
     }
 }

@@ -33,8 +33,7 @@ public class IdentityService {
 
     public Flux<IdentityResponse> findAll() {
         return identityRepository.findAll()
-                .flatMap(identity -> identityMapper.toIdentityResponse(Mono.just(identity))
-                )
+                .flatMap(identity -> identityMapper.toIdentityResponse(Mono.just(identity)))
                 .log("IDENTITY-SERVICE::findAll");
     }
 

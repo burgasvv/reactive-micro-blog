@@ -24,12 +24,12 @@ Authorization: Basic admin admin
 ###
 POST http://localhost:8765/posts/create
 Content-Type: application/json
-Authorization: Basic admin admin
+Authorization: Basic user user
 
 {
-  "identityId": 1,
-  "wallId": 1,
-  "content": "Новый пост, который запостил админ"
+  "identityId": 2,
+  "wallId": 2,
+  "content": "Новый пост, который запостил пользователь"
 }
 
 ###
@@ -39,8 +39,9 @@ Authorization: Basic admin admin
 
 {
   "id": 2,
-  "identityId": 1,
-  "content": "Новый пост, который запостил админ, был успешно изменен?"
+  "identityId": 2,
+  "wallId": 2,
+  "content": "Новый пост, который запостил пользователь, был успешно изменен?"
 }
 
 ###
@@ -226,6 +227,17 @@ Authorization: Basic admin admin
 }
 
 ###
+POST http://localhost:8765/posts/create
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "identityId": 1,
+  "wallId": 3,
+  "content": "Приветствую всех на странице сообщества"
+}
+
+###
 POST http://localhost:8765/communities/join-the-community
 Content-Type: application/json
 Authorization: Basic user user
@@ -259,3 +271,25 @@ Authorization: Basic admin admin
 GET http://localhost:8765/communities/1
 Content-Type: application/json
 Authorization: Basic user user
+
+###
+POST http://localhost:8765/communities/send-invitation-community-administration
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "identityId": 1,
+  "receiverId": 2,
+  "communityId": 1
+}
+
+###
+POST http://localhost:8765/communities/accept-invitation-community-administration
+Content-Type: application/json
+Authorization: Basic user user
+
+{
+  "identityId": 1,
+  "receiverId": 2,
+  "communityId": 1
+}

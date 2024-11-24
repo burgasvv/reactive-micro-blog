@@ -94,7 +94,7 @@ public class CommunityService {
                                         .flatMap(communityRepository::save)
                                         .flatMap(
                                                 community -> communityRepository
-                                                        .insertCommunityCreator(identityPrincipal.getId(), community.getId())
+                                                        .insertCommunityAdmin(identityPrincipal.getId(), community.getId())
                                                         .then(communityMapper.toCommunityResponse(Mono.just(community)))
                                         );
                             } else
