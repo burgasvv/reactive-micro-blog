@@ -78,4 +78,13 @@ public interface CommunityRepository extends ReactiveCrudRepository<Community, L
                     """
     )
     Mono<Void> makeInvitationAccepted(Long communityId, Long identityId, Long receiverId, Boolean isAccepted);
+
+    @Modifying
+    @Query(
+            value = """
+                    delete from community_invitation where community_id = :communityId
+                                                       and identity_id = :identityId and receiver_id = :receiverId
+                    """
+    )
+    Mono<Void> declineInvitationToCommunity(Long communityId, Long identityId, Long receiverId);
 }

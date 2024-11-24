@@ -293,3 +293,19 @@ Authorization: Basic user user
   "receiverId": 2,
   "communityId": 1
 }
+
+###
+DELETE http://localhost:8765/communities/decline-invitation-community-administration
+Content-Type: application/json
+Authorization: Basic user user
+
+{
+  "identityId": 1,
+  "receiverId": 2,
+  "communityId": 1
+}
+
+###
+GET http://localhost:8765/communities/get-notifications-for-receiver?receiverId=2
+Content-Type: application/json
+Authorization: Basic user user

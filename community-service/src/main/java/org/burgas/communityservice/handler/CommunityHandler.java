@@ -3,6 +3,7 @@ package org.burgas.communityservice.handler;
 import lombok.RequiredArgsConstructor;
 import org.burgas.communityservice.dto.CommunityRequest;
 import org.burgas.communityservice.dto.CommunityResponse;
+import org.burgas.communityservice.dto.IdentityCommunityNotification;
 import org.burgas.communityservice.dto.IdentityCommunityRequest;
 import org.burgas.communityservice.service.CommunityService;
 import org.burgas.communityservice.service.IdentityCommunityService;
@@ -19,6 +20,16 @@ public class CommunityHandler {
 
     private final CommunityService communityService;
     private final IdentityCommunityService identityCommunityService;
+
+    public Mono<ServerResponse> handleGetNotificationsByReceiver(ServerRequest request) {
+        return ServerResponse.ok().body(
+                identityCommunityService.getNotificationsByReceiver(
+                        request.queryParam("receiverId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                IdentityCommunityNotification.class
+        );
+    }
 
     public Mono<ServerResponse> handleFindById(ServerRequest request) {
         return ServerResponse.ok().body(
@@ -89,6 +100,16 @@ public class CommunityHandler {
     public Mono<ServerResponse> handleAcceptInvitationToCommunityAdministration(ServerRequest request) {
         return ServerResponse.ok().body(
                 identityCommunityService.acceptInvitationToCommunityAdministration(
+                        request.bodyToMono(IdentityCommunityRequest.class),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                String.class
+        );
+    }
+
+    public Mono<ServerResponse> handleDeclineInvitationToCommunityAdministration(ServerRequest request) {
+        return ServerResponse.ok().body(
+                identityCommunityService.declineInvitationToCommunityAdministration(
                         request.bodyToMono(IdentityCommunityRequest.class),
                         request.headers().firstHeader(AUTHORIZATION)
                 ),

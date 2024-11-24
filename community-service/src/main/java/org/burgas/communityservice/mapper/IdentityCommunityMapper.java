@@ -5,6 +5,7 @@ import org.burgas.communityservice.dto.CommunityResponse;
 import org.burgas.communityservice.dto.IdentityCommunityNotification;
 import org.burgas.communityservice.dto.IdentityCommunityRequest;
 import org.burgas.communityservice.dto.IdentityResponse;
+import org.burgas.communityservice.entity.CommunityInvitation;
 import org.burgas.communityservice.handler.WebClientHandler;
 import org.burgas.communityservice.service.CommunityService;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,30 @@ public class IdentityCommunityMapper {
                                             );
                                         }
                                 )
+        );
+    }
+
+    public Mono<IdentityCommunityNotification> toInvitationIdentityCommunityNotification(
+            Mono<CommunityInvitation> communityInvitationMono, String authValue
+    ) {
+        return communityInvitationMono.flatMap(
+                communityInvitation -> Mono.zip(
+                        webClientHandler.getIdentityById(String.valueOf(communityInvitation.getIdentityId()), authValue),
+                        communityService.findById(String.valueOf(communityInvitation.getCommunityId()))
+                )
+                        .flatMap(
+                                objects -> {
+                                    IdentityResponse identityResponse = objects.getT1();
+                                    CommunityResponse communityResponse = objects.getT2();
+                                    return Mono.fromCallable(
+                                            () -> IdentityCommunityNotification.builder()
+                                                    .receiverId(communityInvitation.getReceiverId())
+                                                    .identityResponse(identityResponse)
+                                                    .communityResponse(communityResponse)
+                                                    .build()
+                                    );
+                                }
+                        )
         );
     }
 }

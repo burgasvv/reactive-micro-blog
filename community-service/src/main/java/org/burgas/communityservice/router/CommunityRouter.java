@@ -17,6 +17,7 @@ public class CommunityRouter {
     @Bean
     public RouterFunction<ServerResponse> communities() {
         return RouterFunctions.route()
+                .GET("/communities/get-notifications-for-receiver", communityHandler::handleGetNotificationsByReceiver)
                 .GET("/communities/{community-id}", communityHandler::handleFindById)
                 .GET("/communities/on-identity/{identity-id}", communityHandler::handleFindCommunitiesByIdentityId)
                 .POST("/communities/create-wall", communityHandler::handleCreateCommunityWallByCommunityId)
@@ -28,6 +29,10 @@ public class CommunityRouter {
                 .POST(
                         "/communities/accept-invitation-community-administration",
                         communityHandler::handleAcceptInvitationToCommunityAdministration
+                )
+                .DELETE(
+                        "/communities/decline-invitation-community-administration",
+                        communityHandler::handleDeclineInvitationToCommunityAdministration
                 )
                 .build();
     }
