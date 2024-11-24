@@ -3,7 +3,6 @@ package org.burgas.communityservice.config;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.burgas.communityservice.dto.IdentityCommunityNotification;
-import org.burgas.communityservice.dto.IdentityCommunityRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
