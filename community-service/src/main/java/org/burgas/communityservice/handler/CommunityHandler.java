@@ -21,9 +21,19 @@ public class CommunityHandler {
     private final CommunityService communityService;
     private final IdentityCommunityService identityCommunityService;
 
-    public Mono<ServerResponse> handleGetNotificationsByReceiver(ServerRequest request) {
+    public Mono<ServerResponse> handleGetNotAcceptedNotificationsByReceiver(ServerRequest request) {
         return ServerResponse.ok().body(
-                identityCommunityService.getNotificationsByReceiver(
+                identityCommunityService.getNotAcceptedNotificationsByReceiver(
+                        request.queryParam("receiverId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                IdentityCommunityNotification.class
+        );
+    }
+
+    public Mono<ServerResponse> handleGetAcceptedNotificationsByReceiver(ServerRequest request) {
+        return ServerResponse.ok().body(
+                identityCommunityService.getAcceptedNotificationsByReceiver(
                         request.queryParam("receiverId").orElse(null),
                         request.headers().firstHeader(AUTHORIZATION)
                 ),

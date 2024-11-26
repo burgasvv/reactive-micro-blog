@@ -17,14 +17,22 @@ public class CommunityRouter {
     @Bean
     public RouterFunction<ServerResponse> communities() {
         return RouterFunctions.route()
-                .GET("/communities/get-notifications-for-receiver", communityHandler::handleGetNotificationsByReceiver)
+                .GET(
+                        "/communities/get-not-accepted-notifications-for-receiver",
+                        communityHandler::handleGetNotAcceptedNotificationsByReceiver
+                )
+                .GET(
+                        "/communities/get-accepted-notifications-for-receiver",
+                        communityHandler::handleGetAcceptedNotificationsByReceiver
+                )
                 .GET("/communities/{community-id}", communityHandler::handleFindById)
                 .GET("/communities/on-identity/{identity-id}", communityHandler::handleFindCommunitiesByIdentityId)
                 .POST("/communities/create-wall", communityHandler::handleCreateCommunityWallByCommunityId)
                 .POST("/communities/create", communityHandler::handleCreateCommunity)
                 .POST("/communities/join-the-community", communityHandler::handleJoinTheCommunity)
                 .POST("/communities/leave-the-community", communityHandler::handleLeaveTheCommunity)
-                .POST("/communities/send-invitation-community-administration",
+                .POST(
+                        "/communities/send-invitation-community-administration",
                         communityHandler::handleSendInvitationToCommunityAdministration)
                 .POST(
                         "/communities/accept-invitation-community-administration",

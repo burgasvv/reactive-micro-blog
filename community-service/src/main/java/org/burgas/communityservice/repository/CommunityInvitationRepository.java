@@ -16,4 +16,12 @@ public interface CommunityInvitationRepository extends ReactiveCrudRepository<Co
                     """
     )
     Flux<CommunityInvitation> findCommunityInvitationsByReceiverIdAndIsAcceptedFalse(Long receiverId);
+
+    @Query(
+            value = """
+                    select distinct ci.* from community_invitation ci
+                                where ci.receiver_id = :receiver_id and ci.is_accepted = true
+                    """
+    )
+    Flux<CommunityInvitation> findCommunityInvitationsByReceiverIdAndIsAcceptedTrue(Long receiverId);
 }

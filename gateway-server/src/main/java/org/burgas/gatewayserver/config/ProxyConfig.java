@@ -15,25 +15,25 @@ public class ProxyConfig {
                         "identities",
                         predicateSpec -> predicateSpec
                                 .path("/identities/**", "/friendship/**")
-                                .uri("lb://identity-service")
+                                .uri("http://localhost:8888")
                 )
                 .route(
                         "posts",
                         predicateSpec -> predicateSpec
                                 .path("/comments/**", "/posts/**")
-                                .uri("lb://post-service")
+                                .uri("http://localhost:9000")
                 )
                 .route(
                         "chats",
                         predicateSpec -> predicateSpec
                                 .path("/chats/**", "/messages/**")
-                                .uri("lb://chat-service")
+                                .uri("http://localhost:9010")
                 )
                 .route(
                         "communities",
                         predicateSpec -> predicateSpec
                                 .path("/communities/**")
-                                .uri("lb://community-service")
+                                .uri("http://localhost:9020")
                 )
                 .build();
     }

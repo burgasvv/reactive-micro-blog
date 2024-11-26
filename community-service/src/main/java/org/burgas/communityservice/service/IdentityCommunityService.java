@@ -29,7 +29,9 @@ public class IdentityCommunityService {
     private final WebClientHandler webClientHandler;
     private final KafkaProducer kafkaProducer;
 
-    public Flux<IdentityCommunityNotification> getNotificationsByReceiver(String receiverId, String authValue) {
+    public Flux<IdentityCommunityNotification> getNotAcceptedNotificationsByReceiver(
+            String receiverId, String authValue
+    ) {
         return webClientHandler.getPrincipal(authValue)
                 .flux()
                 .flatMap(
@@ -40,6 +42,33 @@ public class IdentityCommunityService {
                             ) {
                                 return communityInvitationRepository.
                                         findCommunityInvitationsByReceiverIdAndIsAcceptedFalse(Long.valueOf(receiverId))
+                                        .flatMap(
+                                                communityInvitation -> identityCommunityMapper
+                                                        .toInvitationIdentityCommunityNotification(
+                                                                Mono.just(communityInvitation), authValue
+                                                        )
+                                        );
+                            } else
+                                return Flux.error(
+                                        new RuntimeException("Пользователь не авторизован и не имеет прав доступа")
+                                );
+                        }
+                );
+    }
+
+    public Flux<IdentityCommunityNotification> getAcceptedNotificationsByReceiver(
+            String receiverId, String authValue
+    ) {
+        return webClientHandler.getPrincipal(authValue)
+                .flux()
+                .flatMap(
+                        identityPrincipal -> {
+                            if (
+                                    identityPrincipal.getAuthenticated() &&
+                                    Objects.equals(identityPrincipal.getId(), Long.valueOf(receiverId))
+                            ) {
+                                return communityInvitationRepository.
+                                        findCommunityInvitationsByReceiverIdAndIsAcceptedTrue(Long.valueOf(receiverId))
                                         .flatMap(
                                                 communityInvitation -> identityCommunityMapper
                                                         .toInvitationIdentityCommunityNotification(
