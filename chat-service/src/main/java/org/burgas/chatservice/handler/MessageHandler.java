@@ -17,10 +17,12 @@ public class MessageHandler {
     private final MessageService messageService;
 
     public Mono<ServerResponse> handleSendMessage(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok()
                 .body(
-                        messageService.sendPrivateMessage(request.bodyToMono(MessageRequest.class), authValue),
+                        messageService.sendPrivateMessage(
+                                request.bodyToMono(MessageRequest.class),
+                                request.headers().firstHeader(AUTHORIZATION)
+                        ),
                         String.class
                 );
     }

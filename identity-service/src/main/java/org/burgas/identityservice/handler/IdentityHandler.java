@@ -44,32 +44,41 @@ public class IdentityHandler {
     }
 
     public Mono<ServerResponse> handleCreateIdentity(final ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                identityService.createIdentity(request.bodyToMono(IdentityRequestCreate.class), authValue),
+                identityService.createIdentity(
+                        request.bodyToMono(IdentityRequestCreate.class),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
                 IdentityResponse.class
         );
     }
 
     public Mono<ServerResponse> handleUpdateIdentity(final ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                identityService.updateIdentity(request.bodyToMono(IdentityRequestUpdate.class), authValue),
+                identityService.updateIdentity(
+                        request.bodyToMono(IdentityRequestUpdate.class),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
                 IdentityResponse.class
         );
     }
 
     public Mono<ServerResponse> handleDeleteIdentity(final ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                identityService.deleteIdentity(request.pathVariable("identity-id"), authValue), String.class
+                identityService.deleteIdentity(
+                        request.pathVariable("identity-id"),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                String.class
         );
     }
 
     public Mono<ServerResponse> handleFindFriendsByIdentityId(final ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                identityService.findFriendsByIdentityId(request.pathVariable("identity-id"), authValue),
+                identityService.findFriendsByIdentityId(
+                        request.pathVariable("identity-id"),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
                 IdentityResponse.class
         );
     }

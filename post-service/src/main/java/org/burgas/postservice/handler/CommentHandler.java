@@ -18,29 +18,33 @@ public class CommentHandler {
     private final CommentService commentService;
 
     public Mono<ServerResponse> handleFindByPostId(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                commentService.findByPostId(request.queryParam("postId").orElse(null), authValue),
+                commentService.findByPostId(
+                        request.queryParam("postId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
                 CommentResponse.class
         );
     }
 
     public Mono<ServerResponse> handleCreateOrUpdate(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                commentService.createOrUpdate(request.bodyToMono(CommentRequest.class), authValue),
+                commentService.createOrUpdate(
+                        request.bodyToMono(CommentRequest.class),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
                 CommentResponse.class
         );
     }
 
     public Mono<ServerResponse> handleDelete(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
                 commentService.delete(
                         request.queryParam("commentId").orElse(null),
                         request.queryParam("identityId").orElse(null),
-                        authValue
-                ), String.class
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                String.class
         );
     }
 }

@@ -48,10 +48,9 @@ public class CommunityHandler {
     }
 
     public Mono<ServerResponse> handleFindCommunitiesByIdentityId(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
                 communityService.findCommunitiesByIdentityId(
-                        request.pathVariable("identity-id"), authValue
+                        request.pathVariable("identity-id"), request.headers().firstHeader(AUTHORIZATION)
                 ),
                 CommunityResponse.class
         );
@@ -68,31 +67,31 @@ public class CommunityHandler {
     }
 
     public Mono<ServerResponse> handleCreateCommunity(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
                 communityService.createCommunity(
                         request.bodyToMono(CommunityRequest.class),
-                        request.queryParam("identityId").orElse(null), authValue
+                        request.queryParam("identityId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
                 ),
                 CommunityResponse.class
         );
     }
 
     public Mono<ServerResponse> handleJoinTheCommunity(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
                 communityService.joinTheCommunity(
-                        request.bodyToMono(IdentityCommunityRequest.class), authValue
+                        request.bodyToMono(IdentityCommunityRequest.class),
+                        request.headers().firstHeader(AUTHORIZATION)
                 ),
                 String.class
         );
     }
 
     public Mono<ServerResponse> handleLeaveTheCommunity(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
                 communityService.leaveTheCommunity(
-                        request.bodyToMono(IdentityCommunityRequest.class), authValue
+                        request.bodyToMono(IdentityCommunityRequest.class),
+                        request.headers().firstHeader(AUTHORIZATION)
                 ),
                 String.class
         );

@@ -17,20 +17,22 @@ public class ChatHandler {
     private final ChatService chatService;
 
     public Mono<ServerResponse> handleFindChatsByIdentityId(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                chatService.findChatsByIdentityId(request.pathVariable("identity-id"), authValue),
+                chatService.findChatsByIdentityId(
+                        request.pathVariable("identity-id"), request.headers().firstHeader(AUTHORIZATION)
+                ),
                 ChatResponse.class
         );
     }
 
     public Mono<ServerResponse> handleFindById(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
                 chatService.findById(
                         request.pathVariable("chat-id"),
-                        request.queryParam("identityId").orElse(null), authValue
-                ), ChatResponse.class
+                        request.queryParam("identityId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                ChatResponse.class
         );
     }
 }

@@ -18,29 +18,33 @@ public class PostHandler {
     private final PostService postService;
 
     public Mono<ServerResponse> handleFindByIdentityId(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                postService.findByIdentityId(request.queryParam("identityId").orElse(null), authValue),
+                postService.findByIdentityId(
+                        request.queryParam("identityId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
                 PostResponse.class
         );
     }
 
     public Mono<ServerResponse> handleCreateOrUpdate(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
-                postService.createOrUpdate(request.bodyToMono(PostRequest.class), authValue),
+                postService.createOrUpdate(
+                        request.bodyToMono(PostRequest.class),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
                 PostResponse.class
         );
     }
 
     public Mono<ServerResponse> handleDelete(ServerRequest request) {
-        String authValue = request.headers().firstHeader(AUTHORIZATION);
         return ServerResponse.ok().body(
                 postService.delete(
                         request.queryParam("postId").orElse(null),
                         request.queryParam("identityId").orElse(null),
-                        authValue
-                ), String.class
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                String.class
         );
     }
 }
