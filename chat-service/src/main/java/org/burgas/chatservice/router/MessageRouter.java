@@ -17,6 +17,7 @@ public class MessageRouter {
     @Bean
     public RouterFunction<ServerResponse> messages() {
         return RouterFunctions.route()
+                .GET("/messages/events", messageHandler::handleServerSendMessageEvent)
                 .POST("/messages/send-private-message", messageHandler::handleSendMessage)
                 .build();
     }
