@@ -3,6 +3,7 @@ package org.burgas.chatservice.service;
 import lombok.RequiredArgsConstructor;
 import org.burgas.chatservice.dto.IdentityPrincipal;
 import org.burgas.chatservice.dto.MessageRequest;
+import org.burgas.chatservice.entity.Message;
 import org.burgas.chatservice.handler.WebClientHandler;
 import org.burgas.chatservice.kafka.KafkaProducer;
 import org.burgas.chatservice.mapper.ChatMapper;
@@ -67,6 +68,28 @@ public class MessageService {
                             } else
                                 return Mono.error(
                                         new RuntimeException("Пользователь не авторизован и не имеет прав доступа")
+                                );
+                        }
+                );
+    }
+
+    public Mono<String> deleteMessage(String messageId, String authValue) {
+        return Mono.zip(
+                webClientHandler.getPrincipal(authValue), messageRepository.findById(Long.valueOf(messageId))
+        )
+                .flatMap(
+                        objects -> {
+                            IdentityPrincipal identityPrincipal = objects.getT1();
+                            Message message = objects.getT2();
+                            if (
+                                    identityPrincipal.getAuthenticated() &&
+                                    Objects.equals(identityPrincipal.getId(), message.getSenderId())
+                            ) {
+                                return messageRepository.deleteById(Objects.requireNonNull(message.getId()))
+                                        .then(Mono.just("Сообщение успешно удалено"));
+                            } else
+                                return Mono.error(
+                                        new RuntimeException("Пользователь не авторизован или не имеет прав доступа к функционалу")
                                 );
                         }
                 );

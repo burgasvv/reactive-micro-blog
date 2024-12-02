@@ -53,4 +53,14 @@ public class MessageHandler {
                         ServerSentEvent.class
                 );
     }
+
+    public Mono<ServerResponse> handleDeleteMessage(ServerRequest request) {
+        return ServerResponse.ok().body(
+                messageService.deleteMessage(
+                        request.queryParam("messageId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                String.class
+        );
+    }
 }

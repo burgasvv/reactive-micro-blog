@@ -35,4 +35,14 @@ public class ChatHandler {
                 ChatResponse.class
         );
     }
+
+    public Mono<ServerResponse> handleDeleteChatById(ServerRequest request) {
+        return ServerResponse.ok().body(
+                chatService.deleteChatById(
+                        request.queryParam("chatId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                String.class
+        );
+    }
 }

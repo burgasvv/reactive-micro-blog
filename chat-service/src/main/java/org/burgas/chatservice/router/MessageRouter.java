@@ -1,6 +1,8 @@
 package org.burgas.chatservice.router;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -77,6 +79,32 @@ public class MessageRouter {
                                             )
                                     }
                             )
+                    ),
+
+                    @RouterOperation(
+                            path = "/messages/delete-private-message", method = RequestMethod.DELETE,
+                            beanClass = MessageHandler.class, beanMethod = "handleDeleteMessage",
+                            operation = @Operation(
+                                    operationId = "handleDeleteMessage",
+                                    summary = "Удаления личного сообщения по идентификатору отправителя",
+                                    parameters = @Parameter(
+                                            name = "messageId", in = ParameterIn.DEFAULT,
+                                            description = "Message id query parameter"
+                                    ),
+                                    responses = {
+                                            @ApiResponse(
+                                                    responseCode = "200", description = "Successful operation",
+                                                    content = @Content(
+                                                            mediaType = MediaType.TEXT_PLAIN_VALUE,
+                                                            schema = @Schema(implementation = String.class)
+                                                    )
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "500", description = "Server response error",
+                                                    content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)
+                                            )
+                                    }
+                            )
                     )
             }
     )
@@ -84,6 +112,7 @@ public class MessageRouter {
         return RouterFunctions.route()
                 .GET("/messages/events", messageHandler::handleServerSendMessageEvent)
                 .POST("/messages/send-private-message", messageHandler::handleSendMessage)
+                .DELETE("/messages/delete-private-message", messageHandler::handleDeleteMessage)
                 .build();
     }
 }

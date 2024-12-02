@@ -86,6 +86,34 @@ public class ChatRouter {
                                             )
                                     }
                             )
+                    ),
+
+                    @RouterOperation(
+                            path = "/chats/delete", method = RequestMethod.DELETE,
+                            beanClass = ChatHandler.class, beanMethod = "handleDeleteChatById",
+                            operation = @Operation(
+                                    operationId = "handleDeleteChatById",
+                                    summary = "Удалить чат по идентификатору",
+                                    parameters = {
+                                            @Parameter(
+                                                    name = "chatId", in = ParameterIn.DEFAULT,
+                                                    description = "Chat id query parameter"
+                                            )
+                                    },
+                                    responses = {
+                                            @ApiResponse(
+                                                    responseCode = "200", description = "Successful operation",
+                                                    content = @Content(
+                                                            mediaType = MediaType.TEXT_PLAIN_VALUE,
+                                                            schema = @Schema(implementation = String.class)
+                                                    )
+                                            ),
+                                            @ApiResponse(
+                                                    responseCode = "500", description = "Server response error",
+                                                    content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)
+                                            )
+                                    }
+                            )
                     )
             }
     )
@@ -93,6 +121,7 @@ public class ChatRouter {
         return RouterFunctions.route()
                 .GET("/chats/by-identity/{identity-id}", chatHandler::handleFindChatsByIdentityId)
                 .GET("/chats/{chat-id}", chatHandler::handleFindById)
+                .DELETE("/chats/delete", chatHandler::handleDeleteChatById)
                 .build();
     }
 }
