@@ -43,7 +43,8 @@ public class CommunityHandler {
 
     public Mono<ServerResponse> handleFindById(ServerRequest request) {
         return ServerResponse.ok().body(
-                communityService.findById(request.pathVariable("community-id")), CommunityResponse.class
+                communityService.findById(request.pathVariable("community-id")),
+                CommunityResponse.class
         );
     }
 
@@ -100,7 +101,8 @@ public class CommunityHandler {
     public Mono<ServerResponse> handleSendInvitationToCommunityAdministration(ServerRequest request) {
         return ServerResponse.ok().body(
                 identityCommunityService.sendInvitationToCommunityAdministration(
-                        request.bodyToMono(IdentityCommunityRequest.class), request.headers().firstHeader(AUTHORIZATION)
+                        request.bodyToMono(IdentityCommunityRequest.class),
+                        request.headers().firstHeader(AUTHORIZATION)
                 ),
                 String.class
         );

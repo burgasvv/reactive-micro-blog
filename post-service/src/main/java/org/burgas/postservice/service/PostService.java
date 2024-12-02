@@ -33,9 +33,33 @@ public class PostService {
     private final WallRepository wallRepository;
 
     public Flux<PostResponse> findByIdentityId(String identityId, String authValue) {
-        return postRepository.findPostsByIdentityId(Long.valueOf(identityId))
-                .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue))
-                .log("POST_SERVICE::findByIdentityId");
+        return webClientHandler.getPrincipal(authValue)
+                .filter(IdentityPrincipal::getAuthenticated)
+                .flux()
+                .flatMap(
+                        _ -> postRepository.findPostsByIdentityId(Long.valueOf(identityId))
+                                .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue))
+                                .log("POST_SERVICE::findByIdentityId")
+                )
+                .switchIfEmpty(
+                        Flux.error(new RuntimeException(UtilException.NOT_AUTHORIZED_EXCEPTION))
+                )
+                .log("POST_SERVICE::findByIdentityId::NOT_AUTHORIZED_EXCEPTION");
+    }
+
+    public Flux<PostResponse> findByWallId(String wallId, String authValue) {
+        return webClientHandler.getPrincipal(authValue)
+                .filter(IdentityPrincipal::getAuthenticated)
+                .flux()
+                .flatMap(
+                        _ -> postRepository.findPostsByWallId(Long.valueOf(wallId))
+                                .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue))
+                                .log("POST_SERVICE::findByWallId")
+                )
+                .switchIfEmpty(
+                        Flux.error(new RuntimeException(UtilException.NOT_AUTHORIZED_EXCEPTION))
+                )
+                .log("POST_SERVICE::findByWallId::NOT_AUTHORIZED_EXCEPTION");
     }
 
     @Transactional(
@@ -60,12 +84,12 @@ public class PostService {
                                                                 .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue))
                                                         )
                                                         .orElseGet(
-                                                                () -> Mono.error(
-                                                                        new RuntimeException(UtilException.CLOSED_WALL_EXCEPTION)
-                                                                )
+                                                                () -> Mono.error(new RuntimeException(UtilException.CLOSED_WALL_EXCEPTION))
                                                         )
                                         )
-                                        .switchIfEmpty(Mono.error(new RuntimeException(UtilException.WALL_NOT_FOUND_EXCEPTION)));
+                                        .switchIfEmpty(
+                                                Mono.error(new RuntimeException(UtilException.WALL_NOT_FOUND_EXCEPTION))
+                                        );
                             } else
                                 return Mono.error(
                                         new RuntimeException(UtilException.NOT_AUTHORIZED_EXCEPTION)

@@ -194,7 +194,7 @@ Authorization: Basic user user
 }
 
 ###
-DELETE http://localhost:8765/friendship/delete-from friendship
+DELETE http://localhost:8765/friendship/delete-from-friendship
 Content-Type: application/json
 Authorization: Basic burgasvv cg3audio
 

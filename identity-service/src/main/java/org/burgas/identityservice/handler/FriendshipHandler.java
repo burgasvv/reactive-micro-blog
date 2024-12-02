@@ -1,6 +1,7 @@
 package org.burgas.identityservice.handler;
 
 import lombok.RequiredArgsConstructor;
+import org.burgas.identityservice.dto.FriendshipNotification;
 import org.burgas.identityservice.dto.FriendshipRequest;
 import org.burgas.identityservice.service.FriendshipService;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class FriendshipHandler {
                         request.pathVariable("friend-id"), request.headers().firstHeader(AUTHORIZATION),
                         Boolean.parseBoolean(request.queryParam("accepted").orElse(null))
                 ),
-                FriendshipRequest.class
+                FriendshipNotification.class
         );
     }
 

@@ -97,5 +97,5 @@ insert into identity(username, password, email, firstname, lastname, patronymic,
 VALUES ('user','$2a$10$N6c0cWUGpm7G7xxUZ4lCLOXY.3fXkuC9F3wvruJjN4Mwhya8J8ALC','karpov@gmail.com',
         'Карпов','Алексей','Викторович',true, 2);
 
-insert into wall(identity_id, community_id, is_opened) VALUES (1, null, false);
+insert into wall(identity_id, community_id, is_opened) VALUES (1, null, true);
 insert into wall(identity_id, community_id, is_opened) VALUES (2, null, true);

@@ -14,25 +14,37 @@ public class ProxyConfig {
                 .route(
                         "identities",
                         predicateSpec -> predicateSpec
-                                .path("/identities/**", "/friendship/**")
+                                .path(
+                                        "/identities/**", "/friendship/**",
+                                        "/identity-service/v3/api-docs", "/identity-service/v3/api-docs/**"
+                                )
                                 .uri("http://localhost:8888")
                 )
                 .route(
                         "posts",
                         predicateSpec -> predicateSpec
-                                .path("/comments/**", "/posts/**")
+                                .path(
+                                        "/comments/**", "/posts/**",
+                                        "/post-service/v3/api-docs", "/post-service/v3/api-docs/**"
+                                )
                                 .uri("http://localhost:9000")
                 )
                 .route(
                         "chats",
                         predicateSpec -> predicateSpec
-                                .path("/chats/**", "/messages/**")
+                                .path(
+                                        "/chats/**", "/messages/**",
+                                        "/chat-service/v3/api-docs", "/chat-service/v3/api-docs/**"
+                                )
                                 .uri("http://localhost:9010")
                 )
                 .route(
                         "communities",
                         predicateSpec -> predicateSpec
-                                .path("/communities/**")
+                                .path(
+                                        "/communities/**",
+                                        "/community-service/v3/api-docs", "/community-service/v3/api-docs/**"
+                                )
                                 .uri("http://localhost:9020")
                 )
                 .build();

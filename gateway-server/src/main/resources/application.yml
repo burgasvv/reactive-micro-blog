@@ -4,3 +4,20 @@ server:
 spring:
   application:
     name: gateway-server
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      -  name: gateway-service
+         url: /v3/api-docs
+      -  name: identity-service
+         url: /identity-service/v3/api-docs
+      -  name: post-service
+         url: /post-service/v3/api-docs
+      -  name: chat-service
+         url: /chat-service/v3/api-docs
+      -  name: community-service
+         url: /community-service/v3/api-docs

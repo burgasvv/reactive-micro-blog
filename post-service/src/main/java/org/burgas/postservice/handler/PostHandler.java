@@ -27,6 +27,16 @@ public class PostHandler {
         );
     }
 
+    public Mono<ServerResponse> handleFindByWallId(ServerRequest request) {
+        return ServerResponse.ok().body(
+                postService.findByWallId(
+                        request.queryParam("wallId").orElse(null),
+                        request.headers().firstHeader(AUTHORIZATION)
+                ),
+                PostResponse.class
+        );
+    }
+
     public Mono<ServerResponse> handleCreateOrUpdate(ServerRequest request) {
         return ServerResponse.ok().body(
                 postService.createOrUpdate(

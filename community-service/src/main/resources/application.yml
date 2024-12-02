@@ -9,3 +9,9 @@ spring:
     url: r2dbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
+
+springdoc:
+  api-docs:
+    path: /community-service/v3/api-docs
+  swagger-ui:
+    path: /community-service/swagger-ui.html

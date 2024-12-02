@@ -32,9 +32,11 @@ public class AuthenticationHandler {
                 .switchIfEmpty(
                         ServerResponse.status(HttpStatus.UNAUTHORIZED).body(
                                 Mono.fromCallable(
-                                        () -> IdentityPrincipal.builder().username("anonymous").authenticated(false)
+                                        () -> IdentityPrincipal.builder()
+                                                .username("anonymous").authenticated(false)
                                                 .build()
-                                ), IdentityPrincipal.class
+                                ),
+                                IdentityPrincipal.class
                         )
                 );
     }
