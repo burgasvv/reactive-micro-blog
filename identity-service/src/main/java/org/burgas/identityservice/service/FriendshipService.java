@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -44,7 +44,7 @@ public class FriendshipService {
                                 return Optional.of(accepted)
                                         .filter(accept -> !accept)
                                         .map(
-                                                _ -> friendshipRepository
+                                                aBool -> friendshipRepository
                                                         .findFriendshipsByFriendIdAndAcceptedIsFalse(identityPrincipal.getId())
                                                         .flatMap(friendship -> friendshipMapper
                                                                 .toFriendshipNotification(Mono.just(friendship))
@@ -66,7 +66,7 @@ public class FriendshipService {
                 .log("FRIENDSHIP_SERVICE::findFriendshipNotificationsByFriendId");
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> sendFriendRequest(Mono<FriendshipRequest> friendshipRequestMono, String authValue) {
         return Mono.zip(webClientHandler.getPrincipal(authValue), friendshipRequestMono)
                 .flatMap(
@@ -94,7 +94,7 @@ public class FriendshipService {
                 .log("FRIENDSHIP_SERVICE::sendFriendRequest");
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> acceptFriendship(Mono<FriendshipRequest> friendshipRequestMono, String authValue) {
         return Mono.zip(webClientHandler.getPrincipal(authValue), friendshipRequestMono)
                 .flatMap(
@@ -127,7 +127,7 @@ public class FriendshipService {
                 .log("FRIENDSHIP_SERVICE::acceptFriendship");
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> declineFriendship(Mono<FriendshipRequest> friendshipRequestMono, String authValue) {
         return Mono.zip(webClientHandler.getPrincipal(authValue), friendshipRequestMono)
                 .flatMap(
@@ -163,7 +163,7 @@ public class FriendshipService {
                 .log("FRIENDSHIP_SERVICE::declineFriendship");
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> deleteFromFriendship(Mono<FriendshipRequest> friendshipRequestMono, String authValue) {
         return Mono.zip(webClientHandler.getPrincipal(authValue), friendshipRequestMono)
                 .flatMap(

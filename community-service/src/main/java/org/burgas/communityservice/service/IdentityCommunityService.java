@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 @Service
@@ -83,7 +83,7 @@ public class IdentityCommunityService {
                 );
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> sendInvitationToCommunityAdministration(
             Mono<IdentityCommunityRequest> identityCommunityRequestMono, String authValue
     ) {
@@ -101,7 +101,7 @@ public class IdentityCommunityService {
                                 )
                                         .filter(isOwner -> isOwner)
                                         .flatMap(
-                                                _ ->
+                                                aBool ->
                                                         communityRepository.makeInvitationFromCommunityToIdentity(
                                                                 identityCommunityRequest.getCommunityId(),
                                                                 identityCommunityRequest.getIdentityId(),
@@ -128,7 +128,7 @@ public class IdentityCommunityService {
                 );
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> acceptInvitationToCommunityAdministration(
             Mono<IdentityCommunityRequest> identityCommunityRequestMono, String authValue
     ) {
@@ -168,7 +168,7 @@ public class IdentityCommunityService {
                 );
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> declineInvitationToCommunityAdministration(
             Mono<IdentityCommunityRequest> identityCommunityRequestMono, String authValue
     ) {

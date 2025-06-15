@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -33,7 +33,7 @@ public class MessageService {
     private final ChatMapper chatMapper;
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class
+            isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class
     )
     public Mono<String> sendPrivateMessage(Mono<MessageRequest> messageRequestMono, String authValue) {
         return Mono.zip(messageRequestMono, webClientHandler.getPrincipal(authValue))
@@ -73,6 +73,9 @@ public class MessageService {
                 );
     }
 
+    @Transactional(
+            isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class
+    )
     public Mono<String> deleteMessage(String messageId, String authValue) {
         return Mono.zip(
                 webClientHandler.getPrincipal(authValue), messageRepository.findById(Long.valueOf(messageId))

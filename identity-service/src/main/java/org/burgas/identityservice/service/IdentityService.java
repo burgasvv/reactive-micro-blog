@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -52,7 +52,7 @@ public class IdentityService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE,
+            isolation = REPEATABLE_READ,
             propagation = REQUIRED,
             rollbackFor = Exception.class
     )
@@ -79,7 +79,7 @@ public class IdentityService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE,
+            isolation = REPEATABLE_READ,
             propagation = REQUIRED,
             rollbackFor = Exception.class
     )
@@ -91,7 +91,7 @@ public class IdentityService {
                         identityPrincipal ->
                                 Optional.of(identityPrincipal)
                                         .filter(principal -> !principal.getAuthenticated())
-                                        .map(_ ->
+                                        .map(ip ->
                                                         identityMapper.toIdentityCreate(identityRequestCreateMono)
                                                                 .flatMap(identityRepository::save)
                                                                 .flatMap(identity -> identityMapper
@@ -107,7 +107,7 @@ public class IdentityService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE,
+            isolation = REPEATABLE_READ,
             propagation = REQUIRED,
             rollbackFor = Exception.class
     )
@@ -136,7 +136,7 @@ public class IdentityService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE,
+            isolation = REPEATABLE_READ,
             propagation = REQUIRED,
             rollbackFor = Exception.class
     )

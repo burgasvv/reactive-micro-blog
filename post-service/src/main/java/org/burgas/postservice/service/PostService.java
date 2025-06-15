@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -37,7 +37,7 @@ public class PostService {
                 .filter(IdentityPrincipal::getAuthenticated)
                 .flux()
                 .flatMap(
-                        _ -> postRepository.findPostsByIdentityId(Long.valueOf(identityId))
+                        identityPrincipal -> postRepository.findPostsByIdentityId(Long.valueOf(identityId))
                                 .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue))
                                 .log("POST_SERVICE::findByIdentityId")
                 )
@@ -52,7 +52,7 @@ public class PostService {
                 .filter(IdentityPrincipal::getAuthenticated)
                 .flux()
                 .flatMap(
-                        _ -> postRepository.findPostsByWallId(Long.valueOf(wallId))
+                        identityPrincipal -> postRepository.findPostsByWallId(Long.valueOf(wallId))
                                 .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue))
                                 .log("POST_SERVICE::findByWallId")
                 )
@@ -63,7 +63,7 @@ public class PostService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class
+            isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class
     )
     public Mono<PostResponse> createOrUpdate(Mono<PostRequest> postRequestMono, String authValue) {
         return Mono.zip(webClientHandler.getPrincipal(authValue), postRequestMono)
@@ -79,7 +79,7 @@ public class PostService {
                                         .mapNotNull(wall -> wall)
                                         .flatMap(
                                                 wall -> Optional.of(wall).filter(Wall::getIsOpened)
-                                                        .map(_ -> postMapper.toPost(Mono.just(postRequest))
+                                                        .map(wall1 -> postMapper.toPost(Mono.just(postRequest))
                                                                 .flatMap(postRepository::save)
                                                                 .flatMap(post -> postMapper.toPostResponse(Mono.just(post), authValue))
                                                         )
@@ -100,7 +100,7 @@ public class PostService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class
+            isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class
     )
     public Mono<String> delete(String postId, String identityId, String authValue) {
         return webClientHandler.getPrincipal(authValue)

@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
@@ -77,7 +78,7 @@ public class CommunityService {
                 );
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<CommunityResponse> createCommunity(
             Mono<CommunityRequest> communityRequestMono, String identityId, String authValue
     ) {
@@ -105,7 +106,7 @@ public class CommunityService {
                 );
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> joinTheCommunity(Mono<IdentityCommunityRequest> identityCommunityRequestMono, String authValue) {
         return Mono.zip(webClientHandler.getPrincipal(authValue), identityCommunityRequestMono)
                 .flatMap(
@@ -127,7 +128,7 @@ public class CommunityService {
                 );
     }
 
-    @Transactional(isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class)
+    @Transactional(isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class)
     public Mono<String> leaveTheCommunity(Mono<IdentityCommunityRequest> identityCommunityRequestMono, String authValue) {
         return Mono.zip(webClientHandler.getPrincipal(authValue), identityCommunityRequestMono)
                 .flatMap(

@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -36,7 +36,7 @@ public class CommentService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class
+            isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class
     )
     public Mono<CommentResponse> createOrUpdate(Mono<CommentRequest> commentRequestMono, String authValue) {
         return Mono.zip(webClientHandler.getPrincipal(authValue), commentRequestMono)
@@ -63,7 +63,7 @@ public class CommentService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class
+            isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class
     )
     public Mono<String> delete(String commentId, String identityId, String authValue) {
         return webClientHandler.getPrincipal(authValue)

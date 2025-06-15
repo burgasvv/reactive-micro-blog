@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -54,7 +54,7 @@ public class ChatService {
                                              identityPrincipal.getId() == Long.parseLong(identityId)
                 )
                 .flatMap(
-                        _ -> chatRepository.findById(Long.valueOf(chatId))
+                        identityPrincipal -> chatRepository.findById(Long.valueOf(chatId))
                                 .flatMap(chat -> chatMapper.toChatResponse(Mono.just(chat), authValue))
                                 .log("CHAT_SERVICE::findById")
                 )
@@ -64,7 +64,7 @@ public class ChatService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED, rollbackFor = Exception.class
+            isolation = REPEATABLE_READ, propagation = REQUIRED, rollbackFor = Exception.class
     )
     public Mono<String> deleteChatById(String chatId,  String authValue) {
         return Mono.zip(
